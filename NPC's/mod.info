@@ -1,5 +1,5 @@
-name=NPCs
-poster=poster.png
+name=NPCs_Test
+poster=image.png
 id=NPCs_Test
 description=Add NPCs to Proyect Zomboid
-url=
+media=NPCs_Test/media/
