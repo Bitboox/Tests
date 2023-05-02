@@ -1,7 +1,7 @@
 require "NPCs/ISUI/ISUIHandler"
 require "NPCs/ISUI/ISUIMenu"
 require "ISUI/ISPanelJoypad"
-require "Professions"
+require "scripts/Profession"
 require "spawnNpc"
 
 local function spawnNearPlayer(player, radius)
