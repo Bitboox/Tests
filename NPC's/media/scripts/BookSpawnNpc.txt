@@ -2,12 +2,12 @@ module Base
 {
     item BookSpawnNpc
     {
-        Weight	=	0.8,
-        Type	=	Literature,
-        DisplayName	=	Bound Journal,
+        Weight = 1,
+        Type = Literature,
+        DisplayName = Bound Journal,
         DisappearOnUse = FALSE,
-        Icon	=	SkillRecoveryJournal,
-        StaticModel = SkillRecoveryJournal,
-        WorldStaticModel = SkillRecoveryJournal_ground,
+        Icon = item_book,
+        StaticModel = book,
+        WorldStaticModel = book_ground,
     }
 }
