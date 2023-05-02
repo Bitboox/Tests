@@ -4,10 +4,6 @@ require "ISUI/ISPanelJoypad"
 require "Professions"
 require "spawnNpc"
 
-local function isPlayerAdmin(player)
-    return player ~= nil and player:isAdmin()
-end
-
 local function spawnNearPlayer(player, radius)
     local x, y, z = player:getX(), player:getY(), player:getZ()
     local square = getCell():getGridSquare(x, y, z)
@@ -24,10 +20,4 @@ local function spawnNearPlayer(player, radius)
     end
 end
 
-local function onPlayerUpdate(player)
-    if isPlayerAdmin(player) then
-        spawnNearPlayer(player, 30) -- Genera NPCs en un radio de 30 baldosas
-    end
-end
 
-Events.OnPlayerUpdate.Add(onPlayerUpdate)
