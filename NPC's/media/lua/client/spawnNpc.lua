@@ -1,6 +1,7 @@
 require "NPCs/ISUI/ISUIHandler"
 require "NPCs/ISUI/ISUIMenu"
-require "NPCs/NPCsProfession"
+require "ISUI/ISPanelJoypad"
+require "Professions"
 
 function spawnNPC(x, y)
     local square = getCell():getGridSquare(x, y, 0)
@@ -35,11 +36,7 @@ function spawnNPC(x, y)
 
     npc:Say("Hi there!")
 
-    -- Actualiza el cuadro de diálogo de información del NPC
-    local playerObj = getPlayer()
-    if playerObj and playerObj:getModData().NPCsUIShown then
-        ISUIHandler.updateInfoWindow(npc)
-    end
+    return npc
 end
 
 function getRandomName()
@@ -53,7 +50,7 @@ function getRandomModel()
 end
 
 function getRandomProfession()
-    return NPCProfessionTable[math.random(#NPCProfessionTable)].type
+    return ProfessionTable[math.random(#ProfessionTable)].type
 end
 
 function getRandomTraits()
