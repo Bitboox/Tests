@@ -1,21 +1,33 @@
-require "spawnNPC"
+require "NPCs/ISUI/ISUIHandler"
+require "NPCs/ISUI/ISUIMenu"
+require "ISUI/ISPanelJoypad"
+require "Professions"
+require "spawnNpc"
 
-function CreateRandomNPC()
-    local x, y = getPlayer():getX(), getPlayer():getY()
-    spawnNPC(x, y)
+local function isPlayerAdmin(player)
+    return player ~= nil and player:isAdmin()
 end
 
-function SpawnNPCItem(player, item)
-    local x, y = player:getX(), player:getY()
-    spawnNPC(x, y)
+local function spawnNearPlayer(player, radius)
+    local x, y, z = player:getX(), player:getY(), player:getZ()
+    local square = getCell():getGridSquare(x, y, z)
+    if square == nil then
+        return
+    end
+
+    for i = 1, 5 do -- Genera hasta 5 NPCs
+        local offsetx = ZombRand(-radius, radius)
+        local offsety = ZombRand(-radius, radius)
+        local newspawnx = x + offsetx
+        local newspawny = y + offsety
+        spawnNPC(newspawnx, newspawny) -- Llama a la función spawnNPC() del archivo spawnNpc.lua
+    end
 end
 
-Events.OnGameStart.Add(CreateRandomNPC)
+local function onPlayerUpdate(player)
+    if isPlayerAdmin(player) then
+        spawnNearPlayer(player, 30) -- Genera NPCs en un radio de 30 baldosas
+    end
+end
 
--- Agregar un item llamado "spawnNPCItem"
-local item = scriptManager:CreateItem("Base.Hammer")
-item:setDisplayName("Spawn NPC Item")
-item:setName("spawnNPCItem")
-item:setUseDelta(0.1)
-item:setCustomContextMenuOption("Spawn NPC", SpawnNPCItem)
-item:toLuaItem():setAlwaysWelcomeGift(true)
+Events.OnPlayerUpdate.Add(onPlayerUpdate)
