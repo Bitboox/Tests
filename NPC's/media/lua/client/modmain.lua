@@ -3,32 +3,30 @@ require "ISUI/ISUIMenu"
 require "ISUI/ISPanelJoypad"
 require "scripts/Professions"
 
+function AreNpcsNearby(player, x, y, z, radius)
+    for i=0,getWorld():getNumZombies()-1 do
+        local npc = getWorld():getZombieByIndex(i)
+        if npc and npc:isSpawned() and not npc:isDead() and npc:getDistanceWith(x, y, z) <= radius then
+            return true
+        end
+    end
+    return false
+end
+
 function SpawnNpcs()
     local player = getSpecificPlayer(0)
-    if player then
-        local x, y, z = player:getX(), player:getY(), player:getZ()
-        if not AreNpcsNearby(player, x, y, z, 5) then -- Si no hay NPCs cercanos
+    if player and not AreNpcsNearby(player, player:getX(), player:getY(), player:getZ(), 5) then
+        if ZombRand(100) < 10 then
+            local x, y, z = player:getX(), player:getY(), player:getZ()
             local numNpcs = ZombRand(5) + 1 -- Genera entre 1 y 5 NPCs
             for i=1,numNpcs do
                 local name = getFullName()
                 local profession = getProfession()
                 local npc = addNpc(x, y, z, name, profession, "Melee", nil, nil, nil)
-                npc:getInventory():AddItem("Base.Bat")
+                npc:getInventory():Add("Base.Bat")
             end
         end
     end
-end
-
-function AreNpcsNearby(player, x, y, z, radius)
-    local squareRadius = radius * radius
-    for _, npc in ipairs(getStreamedNpcs(player)) do
-        local dx, dy, dz = x - npc:getX(), y - npc:getY(), z - npc:getZ()
-        local distanceSquare = dx * dx + dy * dy + dz * dz
-        if distanceSquare <= squareRadius then
-            return true
-        end
-    end
-    return false
 end
 
 function getFullName()
@@ -57,4 +55,9 @@ function getProfession()
     return professionTable[ZombRand(#professionTable)].type
 end
 
-Events.OnTick.Add(SpawnNpcs)
+function OnGameStart()
+    SpawnNpcs()
+    addTimer(900000, SpawnNpcs) -- Llama a SpawnNpcs cada 15 minutos (900000ms)
+end
+
+Events.OnGameStart.Add(OnGameStart)
