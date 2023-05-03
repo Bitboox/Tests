@@ -7,7 +7,7 @@ function SpawnNpcs()
     local player = getSpecificPlayer(0)
     if player then
         local x, y, z = player:getX(), player:getY(), player:getZ()
-        if not AreNpcsNearby(player, x, y, z, 30) then
+        if not AreNpcsNearby(player, x, y, z, 5) then -- Si no hay NPCs cercanos
             local numNpcs = ZombRand(5) + 1 -- Genera entre 1 y 5 NPCs
             for i=1,numNpcs do
                 local name = getFullName()
@@ -21,18 +21,15 @@ end
 
 function AreNpcsNearby(player, x, y, z, radius)
     local squareRadius = radius * radius
-    for _,npc in ipairs(getOnlineNpcs()) do
-        if npc:isInWorld() and npc:isDead() == false then
-            local dx, dy, dz = npc:getX() - x, npc:getY() - y, npc:getZ() - z
-            if dx * dx + dy * dy + dz * dz <= squareRadius then
-                return true
-            end
+    for _, npc in ipairs(getStreamedNpcs(player)) do
+        local dx, dy, dz = x - npc:getX(), y - npc:getY(), z - npc:getZ()
+        local distanceSquare = dx * dx + dy * dy + dz * dz
+        if distanceSquare <= squareRadius then
+            return true
         end
     end
     return false
 end
-
-Events.OnTick.Add(SpawnNpcs)
 
 function getFullName()
     local firstName = getFullNamePart("firstName")
@@ -59,3 +56,5 @@ function getProfession()
     end
     return professionTable[ZombRand(#professionTable)].type
 end
+
+Events.OnTick.Add(SpawnNpcs)
